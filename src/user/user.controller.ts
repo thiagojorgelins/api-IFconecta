@@ -1,42 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Request, Response } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
-  async createUser(@Body() postUser: CreateUserDto):Promise<CreateUserDto> {
+  @ApiOperation({ summary: 'Criar Usuário'})
+  createUser(@Body() postUser: CreateUserDto) {
     return this.userService.createUser(postUser)
   }
 
   @Get()
-  async getAllUser(@Req() request:Request, @Res() response:Response):Promise<any>{
-    const result = await this.userService.getAllUser()
-    return response.status(200).json({
-      status: 'Ok!',
-      message: "Successfully fetch data!",
-      result: result
-    })
+  @ApiOperation({ summary: 'Exibir todos os usuários cadastrados!'})
+  getAllUser() {
+    return this.userService.getAllUser()
   }
 
+
   @Get(':id')
-  async getUser(@Param('id') id: number):Promise<CreateUserDto | null>{
-    return this.userService.getUser(id);
+  @ApiOperation({ summary: 'Exibir um usuário pelo ID'})
+  getUser(@Param('id') id: string) {
+    return this.userService.getUser(+id);
   }
 
   @Patch(':id')
-  async updateUser(@Param('id') id: number, @Body() user: UpdateUserDto):Promise<UpdateUserDto> {
-    return this.userService.updateUser(id, user);
+  @ApiOperation({ summary: 'Atualizar um usuário'})
+  updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.updateUser(+id, updateUserDto);
   }
 
   @Delete(':id')
-  async removeUser(@Param('id') id: number):Promise<CreateUserDto> {
-    return this.userService.removeUser(id);
+  @ApiOperation({ summary: 'Remover um usuário'})
+  removeUser(@Param('id') id: string) {
+    return this.userService.removeUser(+id);
   }
 }
