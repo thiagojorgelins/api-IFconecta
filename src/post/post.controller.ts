@@ -2,33 +2,38 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Posts')
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
+  @ApiOperation({ summary: 'Criar um post'})
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
     return this.postService.create(createPostDto);
   }
 
+  @ApiOperation({ summary: 'Exibir todos os posts criados'})
   @Get()
   findAll() {
     return this.postService.getAllPost
   }
 
+  @ApiOperation({ summary: 'Exibir um post pelo ID'})
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postService.getPost(+id);
   }
 
+  @ApiOperation({ summary: 'Atualizar um post'})
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.updatePost(+id, updatePostDto);
   }
 
+  @ApiOperation({ summary: 'Remover um post'})
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.postService.removePost(+id);

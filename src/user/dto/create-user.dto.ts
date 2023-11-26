@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client'; 
-import { IsInt, IsString, isString } from 'class-validator';
+import { IsString } from 'class-validator';
 export class CreateUserDto implements Prisma.UserCreateInput{
   @IsString()
   readonly name: string;
