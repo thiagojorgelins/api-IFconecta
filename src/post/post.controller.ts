@@ -11,14 +11,14 @@ export class PostController {
 
   @ApiOperation({ summary: 'Criar um post'})
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
+  createPost(@Body() createPostDto: CreatePostDto) {
     return this.postService.create(createPostDto);
   }
 
   @ApiOperation({ summary: 'Exibir todos os posts criados'})
   @Get()
   findAll() {
-    return this.postService.getAllPost
+    return this.postService.getAllPost()
   }
 
   @ApiOperation({ summary: 'Exibir um post pelo ID'})
@@ -29,13 +29,13 @@ export class PostController {
 
   @ApiOperation({ summary: 'Atualizar um post'})
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+  updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postService.updatePost(+id, updatePostDto);
   }
 
   @ApiOperation({ summary: 'Remover um post'})
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  removePost(@Param('id') id: string) {
     return this.postService.removePost(+id);
   }
 }

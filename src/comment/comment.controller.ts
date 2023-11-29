@@ -12,30 +12,30 @@ export class CommentController {
   @ApiOperation({ summary: 'Criar Comentário'})
   @Post()
   create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+    return this.commentService.createComment(createCommentDto);
   }
 
   @ApiOperation({ summary: 'Exibir todos os comentários'})
   @Get()
   findAll() {
-    return this.commentService.findAll();
+    return this.commentService.getAllComment();
   }
 
   @ApiOperation({ summary: 'Exibir comentário pelo ID'})
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
+    return this.commentService.getComment(+id);
   }
 
   @ApiOperation({ summary: 'Atualizar um comentário'})
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
+    return this.commentService.updateComment(+id, updateCommentDto);
   }
 
   @ApiOperation({ summary: 'Remover um comentário'})
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+    return this.commentService.removeComment(+id);
   }
 }

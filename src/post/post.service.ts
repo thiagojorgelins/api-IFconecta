@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PostService {
-  constructor(private prisma: PrismaService){}
+  constructor(private prisma: PrismaService) { }
 
   create(createPostDto: CreatePostDto) {
     return this.prisma.post.create({
@@ -14,16 +14,31 @@ export class PostService {
   }
 
   getAllPost() {
-    return this.prisma.post.findMany({})
+    return this.prisma.post.findMany({
+      include:{
+        author:{
+          select: {
+            name: true
+          }
+        }
+      }
+    })
   }
 
   getPost(id: number) {
-    return this.prisma.post.findUnique({ where: { id: id }})
+    return this.prisma.post.findUnique({ where: { id: id } ,
+    include: {
+      author: {
+        select: {
+          name: true
+        }
+      }
+    }})
   }
 
   updatePost(id: number, updatePostDto: UpdatePostDto) {
     return this.prisma.post.update({
-      where: { id: id},
+      where: { id: id },
       data: updatePostDto
     })
   }

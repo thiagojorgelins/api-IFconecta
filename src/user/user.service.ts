@@ -9,7 +9,7 @@ export class UserService {
 
   createUser(createUserDto: CreateUserDto) {
     return this.prisma.user.create({
-      data: createUserDto
+      data: createUserDto,
     })
   }
 
@@ -19,7 +19,6 @@ export class UserService {
         id: true,
         name: true,
         email: true,
-        posts: true
       },
     });
   }
