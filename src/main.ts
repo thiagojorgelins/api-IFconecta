@@ -7,7 +7,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors()
-  app.useStaticAssets(join(__dirname, '..', '/public/post/images'))
+  app.useStaticAssets(join(__dirname, '..', 'public'))
+  // rota das imagens
+  // http://localhost:3000/post/images/nome da imagem
   const config = new DocumentBuilder()
     .setTitle('API Techconecta')
     .setDescription('API para projeto da disciplina Desenvolvimento WEB 2, do curso de ADS do IFPE Campus Jaboatão')
