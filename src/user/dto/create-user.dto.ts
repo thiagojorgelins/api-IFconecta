@@ -1,23 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client'; 
-import { IsString } from 'class-validator';
+import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
 export class CreateUserDto implements Prisma.UserCreateInput{
+
   @ApiProperty({
-    description: 'User Name',
+    description: 'User name',
     example: 'string'
   })
   @IsString()
-  readonly name: string;
-  @IsString()
+  name: string;
+
   @ApiProperty({
-    description: 'User Email ',
+    description: 'User email',
     example: 'string@email.com'
   })
-  readonly email: string;
+  @IsEmail()
+  email: string;
+
   @ApiProperty({
-    description: 'User Password ',
-    example: 'string'
+    description: 'User password',
+    example: 'P4ssw0rd'
   })
   @IsString()
-  readonly password: string;
+  @MinLength(8)
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message: 'Senha fraca',
+  })
+  password: string;
 }

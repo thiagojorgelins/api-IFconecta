@@ -3,6 +3,7 @@ import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @ApiTags('Posts')
 @Controller('post')
@@ -12,9 +13,10 @@ export class PostController {
   @ApiOperation({ summary: 'Criar um post'})
   @Post()
   createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+    return this.postService.create(createPostDto)
   }
 
+  @IsPublic()
   @ApiOperation({ summary: 'Exibir todos os posts criados'})
   @Get()
   findAll() {
