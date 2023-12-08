@@ -26,6 +26,9 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## .env-example
+$ JWT_SECRET = "Any string here"
+$ DATABASE_URL = "mysql://myuser:mypassword@localhost:3306/mydb"
 ## Installation
 
 ```bash
@@ -33,7 +36,7 @@ $ npm install
 ```
 
 ## Running the app
-
+$ npx prisma migrate dev
 ```bash
 # development
 $ npm run start
