@@ -23,6 +23,7 @@ async function bootstrap() {
     .setTitle('API Techconecta')
     .setDescription('API para projeto da disciplina Desenvolvimento WEB 2, do curso de ADS do IFPE Campus Jaboatão')
     .setVersion('1.0.0')
+    .addBearerAuth()
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('', app, document)

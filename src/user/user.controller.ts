@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from './entities/user.entity';
@@ -25,24 +25,28 @@ export class UserController {
   getAllUser() {
     return this.userService.getAllUser()
   }
-
+  
+  @ApiBearerAuth()
   @Get('profile')
   getUserProfile(@CurrentUser() user: User){
     return user
   }
 
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Exibir um usuário pelo ID'})
   getUser(@Param('id') id: string) {
     return this.userService.getUser(+id);
   }
 
+  @ApiBearerAuth()
   @Patch(':id')
   @ApiOperation({ summary: 'Atualizar um usuário'})
   updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.updateUser(+id, updateUserDto);
   }
 
+  @ApiBearerAuth()
   @Delete(':id')
   @ApiOperation({ summary: 'Remover um usuário'})
   removeUser(@Param('id') id: string) {
