@@ -7,6 +7,7 @@ export class CreatePostDto implements Prisma.PostCreateInput{
     description: 'Post Category',
     example: 'string'
   })
+  @IsString()
   category: string;
 
   @ApiProperty({
@@ -37,5 +38,9 @@ export class CreatePostDto implements Prisma.PostCreateInput{
   @IsNumber()
   authorId: number
 
+  @ApiProperty({
+    description: 'Post Image',
+    type: 'file',
+  })
   postImage: string
 }

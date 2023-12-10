@@ -2,19 +2,26 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Upl
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+import { MulterMiddleware } from 'src/middlewares/upload.middleware';
 
 @ApiTags('Posts')
 @Controller('post')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Criar um post'})
+  @IsPublic()
   @Post()
-  async createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto)
+  @ApiOperation({ summary: 'Criar um post'})
+  @UseInterceptors(MulterMiddleware)
+  @ApiConsumes('multipart/form-data')
+  async createPost(@Body() createPostDto: CreatePostDto, @UploadedFile() file) {
+    // Aqui, você pode acessar o arquivo enviado através da variável 'file'
+    // Faça as alterações necessárias para salvar a string no banco de dados
+    // e armazenar o nome do arquivo (file.filename) em createPostDto.postImage
+    createPostDto.postImage = file.filename;
+    return this.postService.create(createPostDto);
   }
 
   @IsPublic()
