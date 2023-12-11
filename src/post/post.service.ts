@@ -21,6 +21,9 @@ export class PostService {
             name: true
           }
         }
+      },
+      orderBy:{
+        createdAt: 'desc'
       }
     })
   }

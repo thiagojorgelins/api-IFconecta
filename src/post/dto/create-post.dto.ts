@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Prisma } from "@prisma/client";
-import { IsNumber, IsString } from "class-validator";
-
+import { IsOptional, IsString } from "class-validator";
 export class CreatePostDto implements Prisma.PostCreateInput{
   @ApiProperty({
     description: 'Post Category',
@@ -30,17 +29,16 @@ export class CreatePostDto implements Prisma.PostCreateInput{
   })
   @IsString()
   content: string;
-
-  @ApiProperty({
-    description: 'Post AuthorID',
-    example: 'number'
-  })
-  @IsNumber()
+  
   authorId: number
+  authorName: string
 
   @ApiProperty({
     description: 'Post Image',
     type: 'file',
+    format: 'binary',
+    required: false,
   })
+  @IsOptional()
   postImage: string
 }

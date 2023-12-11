@@ -6,7 +6,7 @@ export class LoginRequestBody {
   @IsEmail()
   email: string;
 
-  @ApiProperty({ example: 'Teste123', description: 'Senha' })
+  @ApiProperty({ example: 'P4ssw0rd', description: 'Senha' })
   @IsString()
   password: string;
 }

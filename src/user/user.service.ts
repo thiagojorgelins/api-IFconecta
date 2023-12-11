@@ -28,6 +28,8 @@ export class UserService {
         id: true,
         name: true,
         email: true,
+        createdAt: true,
+        updatedAt: true
       },
     });
   }

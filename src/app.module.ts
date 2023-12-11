@@ -7,7 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { MulterMiddleware } from './middlewares/upload.middleware';
+import { UploadMiddleware } from './middlewares/upload.middleware';
 
 @Module({
   imports: [UserModule, CommentModule, PostModule, PrismaModule, AuthModule],
@@ -17,7 +17,7 @@ import { MulterMiddleware } from './middlewares/upload.middleware';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(MulterMiddleware)
+      .apply(UploadMiddleware)
       .forRoutes({ path: 'post', method: RequestMethod.POST });
   }
 }

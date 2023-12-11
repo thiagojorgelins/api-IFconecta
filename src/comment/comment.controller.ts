@@ -4,6 +4,8 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from '@prisma/client';
 
 @ApiTags('Comments')
 @Controller('comment')
@@ -13,7 +15,9 @@ export class CommentController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Criar Comentário'})
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
+  create(@Body() createCommentDto: CreateCommentDto, @CurrentUser() user: User) {
+    createCommentDto.authorId = user.id
+    createCommentDto.authorName = user.name
     return this.commentService.createComment(createCommentDto);
   }
 

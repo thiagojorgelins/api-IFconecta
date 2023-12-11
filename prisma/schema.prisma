@@ -15,6 +15,8 @@ model User {
   email     String  @unique
   name      String
   password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   posts     Post[]
   comments  Comment[]
 }
@@ -24,20 +26,24 @@ model Post {
   category  String
   title     String
   subtitle  String
-  content   String
+  content   String @db.Text
   postImage String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  author    User?    @relation(fields: [authorId], references: [id])
+  author    User?   @relation(fields: [authorId], references: [id])
   authorId  Int?
+  authorName String?
   comments  Comment[]
 }
 
 model Comment {
   id        Int      @default(autoincrement()) @id
-  content   String
+  content   String   
   post      Post?    @relation(fields: [postId], references: [id])
   author    User?    @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   postId    Int?
   authorId  Int?
+  authorName String?
 }
