@@ -14,38 +14,39 @@ export class CommentController {
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Criar Comentário'})
-  @Post()
-  create(@Body() createCommentDto: CreateCommentDto, @CurrentUser() user: User) {
+  @Post(':postId')
+  async create(@Body() createCommentDto: CreateCommentDto, @CurrentUser() user: User, @Param('postId') postId:  string): Promise<any> {
+    createCommentDto.postId = +postId
     createCommentDto.authorId = user.id
     createCommentDto.authorName = user.name
-    return this.commentService.createComment(createCommentDto);
+    return await this.commentService.createComment(createCommentDto)
   }
 
   @IsPublic()
   @ApiOperation({ summary: 'Exibir todos os comentários'})
   @Get()
   findAll() {
-    return this.commentService.getAllComment();
+    return this.commentService.getAllComment()
   }
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Exibir comentário pelo ID'})
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.commentService.getComment(+id);
+    return this.commentService.getComment(+id)
   }
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Atualizar um comentário'})
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.updateComment(+id, updateCommentDto);
+    return this.commentService.updateComment(+id, updateCommentDto)
   }
 
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Remover um comentário'})
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.commentService.removeComment(+id);
+    return this.commentService.removeComment(+id)
   }
 }
