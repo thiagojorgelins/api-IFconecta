@@ -13,24 +13,6 @@ export class CommentService {
     })
   }
 
-  getAllComment() {
-    return this.prisma.comment.findMany({})
-  }
-
-  getComment(id: number) {
-    return this.prisma.comment.findUnique({
-      where: { id: id },
-      select: {
-        content: true,
-        author: {
-          select: {
-            name: true,
-          }
-        }
-      }
-    })
-  }
-
   updateComment(id: number, updateCommentDto: UpdateCommentDto) {
     return this.prisma.comment.update({
       where: { id: id },

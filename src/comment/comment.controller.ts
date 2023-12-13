@@ -22,20 +22,6 @@ export class CommentController {
     return await this.commentService.createComment(createCommentDto)
   }
 
-  @IsPublic()
-  @ApiOperation({ summary: 'Exibir todos os comentários'})
-  @Get()
-  findAll() {
-    return this.commentService.getAllComment()
-  }
-
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Exibir comentário pelo ID'})
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.getComment(+id)
-  }
-
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Atualizar um comentário'})
   @Patch(':id')
