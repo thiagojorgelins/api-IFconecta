@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, HttpException, HttpStatus, HttpCode, MaxFileSizeValidator, FileTypeValidator, ParseFilePipe, ParseFilePipeBuilder } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, HttpException, HttpStatus, HttpCode, MaxFileSizeValidator, FileTypeValidator, ParseFilePipe, ParseFilePipeBuilder, Query } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -7,6 +7,7 @@ import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { UploadMiddleware } from 'src/middlewares/upload.middleware';
+import { retry } from 'rxjs';
 
 @ApiTags('Posts')
 @Controller('post')
@@ -65,5 +66,18 @@ export class PostController {
   @Delete(':id')
   removePost(@Param('id') id: string) {
     return this.postService.removePost(+id)
+  }
+
+  @IsPublic()
+  @Get('search/:filters')
+  searchPosts(@Query('filters') query: string) {
+    return this.postService.searchPosts(query)
+  }
+
+  @IsPublic()
+  @ApiOperation({ summary: 'Exibir posts por categoria' })
+  @Get('category/:category')
+  findPostsByCategory(@Param('category') category: string) {
+    return this.postService.getPostsByCategory(category);
   }
 }

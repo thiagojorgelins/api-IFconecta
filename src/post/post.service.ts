@@ -41,6 +41,44 @@ export class PostService {
     })
   }
 
+  getPostsByCategory(category: string) {
+    return this.prisma.post.findMany({
+      where: { category: category },
+      include: {
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+  }
+
+  searchPosts(filters: string) {
+    return this.prisma.post.findMany({
+      where: {
+        OR: [
+          { title: { contains: filters } },
+          { subtitle: { contains: filters } },
+          { category: { contains: filters } },
+        ],
+      },
+      include: {
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+  }
+
   updatePost(id: number, updatePostDto: UpdatePostDto) {
     return this.prisma.post.update({
       where: { id: id },
