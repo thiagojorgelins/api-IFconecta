@@ -7,7 +7,6 @@ import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from 'src/user/entities/user.entity';
 import { UploadMiddleware } from 'src/middlewares/upload.middleware';
-import { retry } from 'rxjs';
 
 @ApiTags('Posts')
 @Controller('post')
@@ -51,7 +50,7 @@ export class PostController {
   @ApiOperation({ summary: 'Exibir um post pelo ID' })
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.postService.getPost(+id);
+    return this.postService.getPost(+id)
   }
 
   @ApiBearerAuth()

@@ -1,13 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from './entities/user.entity';
-import { AuthGuard } from '@nestjs/passport';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { UserUploadMiddleware } from 'src/middlewares/upload.middleware';
 
 @ApiTags('Users')
 @Controller('user')
@@ -17,8 +16,13 @@ export class UserController {
   @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Criar usuário'})
-  createUser(@Body() createUser: CreateUserDto) {
-    return this.userService.createUser(createUser)
+  @UseInterceptors(UserUploadMiddleware)
+  @ApiConsumes('multipart/form-data')
+  async createUser(@Body() createUserDto: CreateUserDto, @UploadedFile() file) {
+    if (file){
+      createUserDto.userImage = file.filename
+    }
+    return await this.userService.createUser(createUserDto)
   }
 
   @IsPublic()

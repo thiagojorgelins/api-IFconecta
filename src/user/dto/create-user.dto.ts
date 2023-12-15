@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client'; 
-import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, Matches, MinLength } from 'class-validator';
 export class CreateUserDto implements Prisma.UserCreateInput{
 
   @ApiProperty({
@@ -27,4 +27,13 @@ export class CreateUserDto implements Prisma.UserCreateInput{
     message: 'Senha fraca',
   })
   password: string;
+
+  @ApiProperty({
+    description: 'User Image',
+    type: 'file',
+    format: 'binary',
+    required: false,
+  })
+  @IsOptional()
+  userImage: string
 }

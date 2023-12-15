@@ -7,7 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { UploadMiddleware } from './middlewares/upload.middleware';
+import { UploadMiddleware, UserUploadMiddleware } from './middlewares/upload.middleware';
 
 @Module({
   imports: [UserModule, CommentModule, PostModule, PrismaModule, AuthModule],
@@ -17,7 +17,11 @@ import { UploadMiddleware } from './middlewares/upload.middleware';
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
+      .apply(UserUploadMiddleware)
+      .forRoutes({ path: 'user', method: RequestMethod.POST })
+    consumer
       .apply(UploadMiddleware)
       .forRoutes({ path: 'post', method: RequestMethod.POST });
-  }
+    }
+    
 }
