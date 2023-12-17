@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ConflictException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -7,6 +7,7 @@ import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from './entities/user.entity';
 import { UserUploadMiddleware } from 'src/middlewares/upload.middleware';
+import { Prisma } from '@prisma/client';
 
 @ApiTags('Users')
 @Controller('user')
@@ -22,7 +23,15 @@ export class UserController {
     if (file){
       createUserDto.userImage = file.filename
     }
-    return await this.userService.createUser(createUserDto)
+    try {
+      return await this.userService.createUser(createUserDto)
+    } catch (error) {
+      if (error.code === 'P2002'){
+        throw new ConflictException('Email já é utilizado!')
+      }
+      throw error
+    }
+    
   }
 
   @IsPublic()
