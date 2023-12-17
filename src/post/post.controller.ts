@@ -60,6 +60,7 @@ export class PostController {
     return this.postService.updatePost(+id, updatePostDto);
   }
 
+  @IsPublic()
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Remover um post' })
   @Delete(':id')
@@ -77,6 +78,6 @@ export class PostController {
   @ApiOperation({ summary: 'Exibir posts por categoria' })
   @Get('category/:category')
   findPostsByCategory(@Param('category') category: string) {
-    return this.postService.getPostsByCategory(category);
+    return this.postService.getPostsByCategory(category)
   }
 }

@@ -88,7 +88,9 @@ export class PostService {
 
   removePost(id: number) {
     return this.prisma.post.delete({
-      where: { id: id },
+      where: {
+        id: id
+      }
     })
   }
 }
