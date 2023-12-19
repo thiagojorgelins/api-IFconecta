@@ -33,6 +33,14 @@ export class PostService {
       where: { id: id },
       include: {
         comments: {
+          include: {
+            author: {
+              select:{
+                name: true,
+                userImage: true
+              }
+            }
+          },
           orderBy: {
             createdAt: 'desc'
           }

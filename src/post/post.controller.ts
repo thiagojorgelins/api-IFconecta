@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, HttpException, HttpStatus, HttpCode, MaxFileSizeValidator, FileTypeValidator, ParseFilePipe, ParseFilePipeBuilder, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Query, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -60,12 +60,27 @@ export class PostController {
     return this.postService.updatePost(+id, updatePostDto);
   }
 
-  @IsPublic()
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Remover um post' })
   @Delete(':id')
-  removePost(@Param('id') id: string) {
-    return this.postService.removePost(+id)
+  async removePost(@Param('id') id: string, createPostDto: CreatePostDto, @CurrentUser() user: User) {
+    try {
+      const post = await this.postService.getPost(+id);
+
+      if (!post) {
+        throw new UnauthorizedException('Post não encontrado')
+      }
+      if (post.authorId !== user.id) {
+        throw new UnauthorizedException('Usuário não autorizado a remover este post')
+      }
+      return this.postService.removePost(+id)
+    } catch (error) {
+      if (error instanceof NotFoundException || error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Ocorreu um erro ao remover o post');
+    }
+
   }
 
   @IsPublic()

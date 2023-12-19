@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ConflictException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, ConflictException, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -7,7 +7,7 @@ import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from './entities/user.entity';
 import { UserUploadMiddleware } from 'src/middlewares/upload.middleware';
-import { Prisma } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('Users')
 @Controller('user')
@@ -40,11 +40,20 @@ export class UserController {
   getAllUser() {
     return this.userService.getAllUser()
   }
-  
+
+  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get('profile')
-  getUserProfile(@CurrentUser() user: User){
-    return user
+  getUserProfile(@CurrentUser() user: User) {
+    try {
+      if (!user) {
+        throw new UnauthorizedException('Nenhum usuário logado');
+      }
+      
+      return user;
+    } catch (error) {
+      throw new UnauthorizedException('Nenhum usuário logado');
+    }
   }
 
   @IsPublic()
